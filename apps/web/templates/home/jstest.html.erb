@@ -1,0 +1,13 @@
+<% unless params.valid? %>
+  <div class="errors">
+    <h3>There was a problem with your submission</h3>
+    <ul>
+      <% params.errors.each do |error| %>
+        <li><%= error.attribute_name %> is required</li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<p><em>Rendered from override template - from within layout</em><p>
+<%= jmt_layout.render %>
