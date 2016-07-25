@@ -170,6 +170,10 @@ module Web
       #
       security.x_frame_options "DENY"
 
+      # NEW IN HANAMI 0.8:
+      # security.x_content_type_options 'nosniff'
+      # security.x_xss_protection '1; mode=block'
+      #
       # Content-Security-Policy (CSP) is a HTTP header supported by modern browsers.
       # It determines trusted sources of execution for dynamic contents
       # (JavaScript) or other web related assets: stylesheets, images, fonts,
@@ -233,6 +237,18 @@ module Web
     configure :development do
       # Don't handle exceptions, render the stack trace
       handle_exceptions false
+
+      # Logger
+      # See: http://hanamirb.org/guides/applications/logging
+      #
+      # Logger stream. It defaults to STDOUT.
+      logger.stream "log/development.log"
+      #
+      # Logger level. It defaults to DEBUG
+      # logger.level :debug
+      #
+      # Logger format. It defaults to DEFAULT
+      # logger.format :default
     end
 
     ##
@@ -241,6 +257,11 @@ module Web
     configure :test do
       # Don't handle exceptions, render the stack trace
       handle_exceptions false
+      # Logger
+      # See: http://hanamirb.org/guides/applications/logging
+      #
+      # Logger level. It defaults to ERROR
+      logger.level :error      
     end
 
     ##
@@ -270,6 +291,18 @@ module Web
         # host   'cdn.example.org'
         # port   443
       end
+
+      # Logger
+      # See: http://hanamirb.org/guides/applications/logging
+      #
+      # Logger stream. It defaults to STDOUT.
+      # logger.stream "log/production.log"
+      #
+      # Logger level. It defaults to INFO
+      logger.level :info
+
+      # Logger format.
+      logger.format :json      
     end
   end
 end

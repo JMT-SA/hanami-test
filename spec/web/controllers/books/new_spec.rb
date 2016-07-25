@@ -2,10 +2,16 @@ require 'spec_helper'
 require_relative '../../../../apps/web/controllers/books/new'
 
 class NewBookParams < Hanami::Action::Params
-  param :book do
-    param :title, presence: true
-    param :author, presence: true
+  params do
+    required(:book).schema do
+      required :title
+      required :author
+    end
   end
+  # param :book do
+  #   param :title, presence: true
+  #   param :author, presence: true
+  # end
 end
 
 describe Web::Controllers::Books::New do

@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'bundler'
 gem 'rake'
-gem 'hanami',       '0.7.3'
+gem 'hanami',       '0.8.0'
 gem 'hanami-model', '~> 0.5'
 
 gem 'sass'
@@ -23,4 +23,12 @@ end
 
 group :production do
   # gem 'puma'
+end
+
+group :development do
+  gem 'shotgun'
+end
+
+group :development, :test do
+  gem 'dotenv', '~> 2.0'
 end

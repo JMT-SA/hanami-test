@@ -5,16 +5,21 @@ module Web::Controllers::Books
     expose :book
     
     params do
-      param :id
-      param :book do
-        param :title,  presence: true
-        param :author, presence: true
+      required(:id)
+      required(:book).schema do
+        required(:title).filled(:str?)
+        required(:author).filled(:str?)
       end
+      # param :id
+      # param :book do
+      #   param :title,  presence: true
+      #   param :author, presence: true
+      # end
     end
 
     def call(params)
       #puts ">>> uPARAMS: #{params.inspect}"
-      puts ">>> uID: #{params['id']} #{params[:id]} #{params[:book].inspect}"
+      puts ">>> uID: #{params[:id]} #{params[:book].inspect}"
       @book = BookRepository.find(params[:id])
       if params.valid?
         #puts ">>> VALID..."

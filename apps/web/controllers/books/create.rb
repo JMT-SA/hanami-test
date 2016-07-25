@@ -5,10 +5,14 @@ module Web::Controllers::Books
     expose :book
     
     params do
-      param :book do
-        param :title,  presence: true
-        param :author, presence: true
+      required(:book).schema do
+        required(:title).filled(:str?)
+        required(:author).filled(:str?)
       end
+      # param :book do
+      #   param :title,  presence: true
+      #   param :author, presence: true
+      # end
     end
 
     def call(params)
