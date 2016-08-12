@@ -11,3 +11,17 @@
 <% else %>
   <p class="placeholder">There are no books yet.</p>
 <% end %>
+<hr>
+<h2>Book list returned from Dataminer query</h2>
+  <% more_books.each do |book| %>
+    <div class="book">
+      <h2><%= book[:title] %></h2>
+      <p><%= book[:author] %>
+<%= link_to 'Edit', routes.edit_book_path(book[:id]) %>
+</p>
+    </div>
+  <% end %>
+<div style="height:20em">
+  <div id="myGrid" style="height: 100%;" class="ag-fresh" data-gridurl="<%=routes.bookgrid_path%>" data-grid="grid"></div>
+</div>
+

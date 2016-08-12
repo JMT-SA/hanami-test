@@ -1,8 +1,13 @@
+PATH
+  remote: /home/james/ra/dm_tests/dataminer
+  specs:
+    dataminer (0.1.0)
+      pg_query
+
 GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.4.0)
-    bcrypt (3.1.11)
     capybara (2.7.1)
       addressable
       mime-types (>= 1.16)
@@ -81,6 +86,7 @@ GEM
       url_mount (~> 0.2.1)
     ice_nine (0.11.2)
     inflecto (0.0.2)
+    json (1.8.3)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
     mime-types (3.1)
@@ -92,19 +98,15 @@ GEM
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
     pg (0.18.4)
+    pg_query (0.11.2)
+      json (~> 1.8)
     pkg-config (1.1.7)
     rack (1.6.4)
-    rack-protection (1.5.3)
-      rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rack_csrf (2.5.0)
-      rack (>= 1.1.0)
     rake (11.2.2)
-    roda (2.1.0)
-      rack
     sass (3.4.22)
-    sequel (4.35.0)
+    sequel (4.36.0)
     shotgun (0.9.1)
       rack (>= 1.0)
     thor (0.19.1)
@@ -118,18 +120,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bcrypt (~> 3.1.10)
   bundler
   capybara
+  dataminer!
   dotenv (~> 2.0)
-  hanami (= 0.8.0)
-  hanami-model (~> 0.5)
+  hanami (~> 0.8)
+  hanami-model (~> 0.6)
   minitest
   pg
-  rack-protection (~> 1.5.3)
-  rack_csrf (~> 2.5.0)
   rake
-  roda (~> 2.1.0)
   sass
   shotgun
 

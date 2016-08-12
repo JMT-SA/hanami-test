@@ -1,6 +1,6 @@
 require './config/environment'
 
-require '../frame2/frame2'
+#require '../frame2/frame2'
 #REQUIRE '../DM_TESTS/PG_TREE'
 
 # map '/frame3' do

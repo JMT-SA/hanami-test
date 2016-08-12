@@ -61,7 +61,7 @@ module Web
       #          :path     - Restrict cookies to a relative URI (String - nil by default)
       #          :max_age  - Cookies expiration expressed in seconds (Integer - nil by default)
       #          :secure   - Restrict cookies to secure connections
-      #                      (Boolean - Automatically set on true if currenlty using a secure connection)
+      #                      (Boolean - Automatically set on true if currently using a secure connection)
       #                      See #scheme and #ssl?
       #          :httponly - Prevent JavaScript access (Boolean - true by default)
       #
@@ -168,12 +168,29 @@ module Web
       #   * https://developer.mozilla.org/en-US/docs/Web/HTTP/X-Frame-Options
       #   * https://www.owasp.org/index.php/Clickjacking
       #
-      security.x_frame_options "DENY"
+      security.x_frame_options 'DENY'
 
-      # NEW IN HANAMI 0.8:
-      # security.x_content_type_options 'nosniff'
-      # security.x_xss_protection '1; mode=block'
+      # X-Content-Type-Options prevents browsers from interpreting files as
+      # something else than declared by the content type in the HTTP headers.
       #
+      # Read more at:
+      #
+      #   * https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#X-Content-Type-Options
+      #   * https://msdn.microsoft.com/en-us/library/gg622941%28v=vs.85%29.aspx
+      #   * https://blogs.msdn.microsoft.com/ie/2008/09/02/ie8-security-part-vi-beta-2-update
+      #
+      security.x_content_type_options 'nosniff'
+
+      # X-XSS-Protection is a HTTP header to determine the behavior of the browser
+      # in case an XSS attack is detected.
+      #
+      # Read more at:
+      #
+      #   * https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)
+      #   * https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#X-XSS-Protection
+      #
+      security.x_xss_protection '1; mode=block'
+
       # Content-Security-Policy (CSP) is a HTTP header supported by modern browsers.
       # It determines trusted sources of execution for dynamic contents
       # (JavaScript) or other web related assets: stylesheets, images, fonts,
@@ -205,8 +222,28 @@ module Web
       #  * http://content-security-policy.com/
       #  * https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Using_Content_Security_Policy
       #
+      # Content Security Policy references:
+      #
+      #  * https://developer.mozilla.org/en-US/docs/Web/Security/CSP/CSP_policy_directives
+      #
+      security.content_security_policy %{
+        form-action 'self';
+        frame-ancestors 'self';
+        base-uri 'self';
+        default-src 'none';
+        script-src 'self' 'unsafe-inline';
+        connect-src 'self';
+        img-src 'self' https: data:;
+        style-src 'self' 'unsafe-inline' https:;
+        font-src 'self';
+        object-src 'none';
+        plugin-types application/pdf;
+        child-src 'self';
+        frame-src 'self';
+        media-src 'self'
+      }
       #security.content_security_policy "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src 'self';"
-      security.content_security_policy "default-src 'none'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src 'self';"
+      #security.content_security_policy "default-src 'none'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src 'self';"
 
       ##
       # FRAMEWORKS
@@ -257,6 +294,7 @@ module Web
     configure :test do
       # Don't handle exceptions, render the stack trace
       handle_exceptions false
+
       # Logger
       # See: http://hanamirb.org/guides/applications/logging
       #
@@ -272,26 +310,6 @@ module Web
       # host   'example.org'
       # port   443
 
-      assets do
-        # Don't compile static assets in production mode (eg. Sass, ES6)
-        #
-        # See: http://www.rubydoc.info/gems/hanami-assets#Configuration
-        compile false
-
-        # Use digest file name for asset paths
-        #
-        # See: http://hanamirb.org/guides/assets/digest
-        digest  true
-
-        # Content Delivery Network (CDN)
-        #
-        # See: http://hanamirb.org/guides/assets/content-delivery-network
-        #
-        # scheme 'https'
-        # host   'cdn.example.org'
-        # port   443
-      end
-
       # Logger
       # See: http://hanamirb.org/guides/applications/logging
       #
@@ -302,7 +320,32 @@ module Web
       logger.level :info
 
       # Logger format.
-      logger.format :json      
+      logger.format :json
+
+      assets do
+        # Don't compile static assets in production mode (eg. Sass, ES6)
+        #
+        # See: http://www.rubydoc.info/gems/hanami-assets#Configuration
+        compile false
+
+        # Use digest file name for asset paths
+        #
+        # See: http://hanamirb.org/guides/assets/overview
+        digest  true
+
+        # Content Delivery Network (CDN)
+        #
+        # See: http://hanamirb.org/guides/assets/content-delivery-network
+        #
+        # scheme 'https'
+        # host   'cdn.example.org'
+        # port   443
+
+        # Subresource Integrity
+        #
+        # See: http://hanamirb.org/guides/assets/subresource-integrity
+        subresource_integrity :sha256
+      end
     end
   end
 end
