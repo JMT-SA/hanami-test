@@ -1,0 +1,60 @@
+---
+:caption: Books
+:sql: "SELECT id, title, author FROM books\r\nORDER BY author, title\r\n"
+:limit: 
+:offset: 
+:columns:
+  id:
+    :name: id
+    :sequence_no: 1
+    :caption: Id
+    :namespaced_name: id
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: true
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  title:
+    :name: title
+    :sequence_no: 2
+    :caption: Title
+    :namespaced_name: title
+    :data_type: :string
+    :width: 200
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  author:
+    :name: author
+    :sequence_no: 3
+    :caption: Author
+    :namespaced_name: author
+    :data_type: :string
+    :width: 150
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+:query_parameter_definitions:
+- :column: author
+  :caption: Author
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 34
+  :ui_priority: 1
+  :list_def: SELECT DISTINCT author FROM books ORDER BY author
