@@ -19,12 +19,20 @@ module JmtLayout
       @page_config = page_config
     end
 
+    def self.make_column(page_config)
+      self.new(page_config, :full, nil, nil)
+    end
+
     def add_field(name, options={})
       @nodes << Field.new(page_config, name, options)
     end
 
     def add_text(text)
       @nodes << Text.new(page_config, text)
+    end
+
+    def add_node(node)
+      @nodes << node
     end
 
     def render

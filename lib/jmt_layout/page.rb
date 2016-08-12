@@ -45,6 +45,13 @@ module JmtLayout
       @nodes << form
     end
 
+    def with_form
+      form = Form.new(page_config, sequence, nodes.length+1)
+      yield form, page_config
+      @nodes << form
+      self
+    end
+
     def render
       "A string rendered from JmtLayout<br>" << nodes.map {|s| s.render }.join("\n<!-- End Section -->\n")
     end
