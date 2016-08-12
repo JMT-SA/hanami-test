@@ -25,7 +25,13 @@
       grid = grids[_i];
       gridOptions = {
         columnDefs: null,
-        rowDefs: null
+        rowDefs: null,
+        enableColResize: true,
+        enableSorting: true,
+        enableFilter: true,
+        suppressScrollLag: true,
+        //suppressCopyRowsToClipboard: true
+        //quickFilterText: 'fred'
       };
       new agGrid.Grid(grid, gridOptions);
       _results.push(loadGrid(grid, gridOptions));

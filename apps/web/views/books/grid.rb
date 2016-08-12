@@ -2,6 +2,7 @@ module Web::Views::Books
   class Grid
     include Web::View
 
+    #NOTE: This whole view is not required - the action returns grid JSON.
     format :json
 
     def render
