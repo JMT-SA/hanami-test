@@ -17,6 +17,6 @@
     <h1>Bookshelf</h1>
     <%= link_to 'Books', routes.books_path %> | <%= link_to 'Contained Books', routes.bookcontainer_path %>
     <%= yield %>
-    <%= javascript 'jmt_layout' %>
+    <%= javascript 'jmt_layout', 'ag-grid.min', 'jmt-grid-loader' %>
   </body>
 </html>
