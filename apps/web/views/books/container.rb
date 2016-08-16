@@ -40,6 +40,8 @@ module Web::Views::Books
           sect.url     = routes.bookback_path
         end
 
+        page.add_grid('grd1', routes.bookgrid_path, caption: 'All Books')
+
       end
     end
   end

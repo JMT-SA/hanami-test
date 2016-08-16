@@ -52,6 +52,10 @@ module JmtLayout
       self
     end
 
+    def add_grid(grid_id, url, options={})
+      @nodes << Grid.new(page_config, grid_id, url, options)
+    end
+
     def render
       "A string rendered from JmtLayout<br>" << nodes.map {|s| s.render }.join("\n<!-- End Section -->\n")
     end

@@ -1,12 +1,31 @@
 class DataminerControl
 
+  #TODO: remove repository.
+  #      Should use db connection directly.
+  #      ...able to use > 1 database?
   def self.grid_from_dataminer(repository, file_name, options={})
     report = get_report_with_options(file_name, options)
     col_defs = []
     report.ordered_columns.each do | col|
       # Web::Logger.debug ">>> #{col.name} - #{col.hide}"
-      hs = {headerName: col.caption, field: col.name, hide: col.hide}
+      hs = {headerName: col.caption, field: col.name, hide: col.hide} #, enableRowGroup: col.groupable
       hs[:width] = col.width unless col.width.nil?
+      hs[:enableRowGroup] = true unless col.name == 'id'
+      hs[:enableValue] = true if col.name == 'id'
+      hs[:aggFunc] = :avg if col.name == 'id'
+      # if col.group_sum
+      # hs[:enableValue] = true
+      # elsif [col.group_avg, col.group_min, col.group_max].any?
+      #   hs["aggFunc] = case
+      #   when col.group_avg
+      #     :avg
+      #   when col.group_min
+      #     :min
+      #   when col.group_max
+      #     :max
+      #     ### count ?????
+      #   end
+      #
       col_defs << hs
     end
 

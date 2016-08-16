@@ -31,6 +31,10 @@ module JmtLayout
       @nodes << Text.new(page_config, text)
     end
 
+    def add_grid(grid_id, url, options={})
+      @nodes << Grid.new(page_config, grid_id, url, options)
+    end
+
     def add_node(node)
       @nodes << node
     end

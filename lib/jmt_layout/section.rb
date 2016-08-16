@@ -22,6 +22,10 @@ module JmtLayout
       @nodes << row
     end
 
+    def add_grid(grid_id, url, options={})
+      @nodes << Grid.new(page_config, grid_id, url, options)
+    end
+
     def render
       row_renders = nodes.map {|s| s.render }.join("\n<!-- End Row -->\n")
       <<-EOS
