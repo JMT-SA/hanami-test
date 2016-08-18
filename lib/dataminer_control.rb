@@ -8,11 +8,16 @@ class DataminerControl
     col_defs = []
     report.ordered_columns.each do | col|
       # Web::Logger.debug ">>> #{col.name} - #{col.hide}"
-      hs                  = {headerName: col.caption, field: col.name, hide: col.hide} #, enableRowGroup: col.groupable
+      hs                  = {headerName: col.caption, field: col.name, hide: col.hide, headerTooltip: col.caption} #, enableRowGroup: col.groupable
       hs[:width]          = col.width unless col.width.nil?
-      hs[:enableRowGroup] = true unless col.name == 'id'
-      hs[:enableValue]    = true if col.name == 'id'
-      hs[:aggFunc]        = :avg if col.name == 'id'
+      #agg_func            = agg_func_for_column(col)
+      #hs[:enableValue]    = true unless agg_func.nil?
+      hs[:enableValue]    = true if [:integer, :number].include?(col.data_type)
+      #hs[:aggFunc]        = agg_func unless agg_func.nil? || agg_func == :sum
+      hs[:enableRowGroup] = true unless hs[:enableValue]
+      # hs[:enableRowGroup] = true unless col.name == 'id'
+      # hs[:enableValue]    = true if col.name == 'id'
+      # hs[:aggFunc]        = :avg if col.name == 'id'
       # if col.group_sum
       # hs[:enableValue] = true
       # elsif [col.group_avg, col.group_min, col.group_max].any?
@@ -26,6 +31,31 @@ class DataminerControl
       #     ### count ?????
       #   end
       #
+      #total_amount: jmtGridFormatters.numberWithCommas2
+      # integer, number, date and boolean.
+      if [:integer, :number].include?(col.data_type)
+        hs[:cellClass] = 'grid-number-column'
+        hs[:width]     = 100 if col.width.nil? && col.data_type == :integer
+        hs[:width]     = 120 if col.width.nil? && col.data_type == :number
+      end
+      if col.format == :delimited_1000
+        hs[:cellRenderer] = 'jmtGridFormatters.numberWithCommas2'
+      end
+      if col.format == :delimited_1000_4
+        hs[:cellRenderer] = 'jmtGridFormatters.numberWithCommas4'
+      end
+      if col.data_type == :boolean
+        hs[:cellRenderer] = 'jmtGridFormatters.booleanFormatter'
+        hs[:cellClass]    = 'grid-boolean-column'
+        hs[:width]        = 100 if col.width.nil?
+      end
+      #hs[:cellClassRules] = {"'grid-row-red'": "x === 'EUR'"} if col.name == 'currency_code' .... not working...
+#     'rag-green-outer': function(params) { return params.value === 2008},
+#     'rag-amber-outer': function(params) { return params.value === 2004},
+#     'rag-red-outer': function(params) { return params.value === 2000}
+# },
+      #puts ">>> #{col.format.class}" if col.name == 'total_amount'
+      #hs[:cellRenderer] = 'jmtGridFormatters.testRender' if col.name == 'total_amount'
       col_defs << hs
     end
 
@@ -36,9 +66,28 @@ class DataminerControl
     }.to_json
   end
 
+  def self.agg_func_for_column(col)
+    case
+    when col.group_sum
+      :sum
+    when col.group_avg
+      :avg
+    when col.group_min
+      :min
+    when col.group_max
+      :max
+    else
+      nil
+      ### count ?????
+    end
+  end
+
   def self.dataminer_query(sql)
     this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/stargrow')
-    this_db[sql].to_a
+    #this_db[sql].to_a
+    # Need to convert all BigDecimal to float for JSON (otherwise the aggregations don't work because amounts are returned as 0.1126673E5)
+    # - Need to do some checking that the resulting float is an accurate representation of the decimal...
+    this_db[sql].to_a.map {|m| m.keys.each {|k| if m[k].is_a?(BigDecimal) then m[k] = m[k].to_f; end }; m; }
   end
 
   def self.dataminer_fetch(repository, file_name, options={})

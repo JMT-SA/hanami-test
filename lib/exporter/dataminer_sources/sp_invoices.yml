@@ -68,7 +68,7 @@
     :namespaced_name: service_provider_invoices.total_amount
     :data_type: :number
     :width: 100
-    :format: delimited_1000
+    :format: :delimited_1000
     :hide: false
     :groupable: false
     :group_by_seq: 

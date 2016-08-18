@@ -47,7 +47,7 @@ module JmtLayout
       </div>
       EOH
       <<-EOS
-      <div style="height:20em">#{head_section}
+      <div style="height:40em">#{head_section}
         <div id="#{grid_id}" style="height: 100%;" class="ag-blue" data-gridurl="#{url}" data-grid="grid"></div>
       </div>
       EOS

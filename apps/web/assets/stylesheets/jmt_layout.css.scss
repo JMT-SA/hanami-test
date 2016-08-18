@@ -7,3 +7,33 @@
 section.jmt_layout {
   border-bottom: gray thin solid;
 }
+.grid-number-column {
+  text-align: right;
+}
+.grid-boolean-column {
+  text-align: center;
+}
+.grid-row-red {
+  color: red;
+  background-color: yellow;
+  text-align: right;
+}
+.ac_icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  display: inline-block;
+  padding-right: 4px;
+}
+.ac_icon_uncheck {
+  @extend .ac_icon;
+  background-image: url(checkbox.png);
+  background-position: -50px -4px;
+}
+.ac_icon_check {
+  @extend .ac_icon;
+  background-image: url(checkbox.png);
+  background-position: -25px -4px;
+}
+

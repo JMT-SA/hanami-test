@@ -114,9 +114,84 @@ var jmtGridEvents = {
 
 };
 
+var jmtGridFormatters = {
+  testRender: function(params) {
+    return '<b>' + params.value.toUpperCase() + '</b>';
+  },
+
+  // Return a number with thousand separator and at least 2 digits after the decimal.
+  numberWithCommas2: function (params) {
+    var x = params.value;
+    if (typeof x === 'string') { x = parseFloat(x); }
+    x = Math.round((x + 0.00001) * 100) / 100 // Round to 2 digits if longer.
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if(parts[1] === undefined || parts[1].length === 0) {parts[1] = '00'; }
+    if(parts[1].length === 1) {parts[1] += '0'; }
+    return parts.join(".");
+  },
+
+  // Return a number with thousand separator and at least 4 digits after the decimal.
+  numberWithCommas4: function (params) {
+    var x = params.value;
+    if (typeof x === 'string') { x = parseFloat(x); }
+    x = Math.round((x + 0.0000001) * 10000) / 10000 // Round to 4 digits if longer.
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if(parts[1] === undefined || parts[1].length === 0) {parts[1] = '0000'; }
+    while(parts[1].length < 4) {parts[1] += '0'; }
+    return parts.join(".");
+  },
+
+  booleanFormatter: function(params) {
+    if(params.value === ''){ return ''; }
+    if(params.value == 't' || params.value == 'true' || params.value == 'y' || params.value == 1) {
+      return "<span class='ac_icon_check'>&nbsp;</span>";
+    }
+    else {
+      return "<span class='ac_icon_uncheck'>&nbsp;</span>";
+    }
+  }
+
+};
+
 (function() {
   var loadGrid;
   var onBtExport;
+
+  translateColDefs = function(columnDefs) {
+    //console.log(columnDefs);
+    var newColDefs = [], col, newCol, fn;
+    for (_i = 0, _len = columnDefs.length; _i < _len; _i++) {
+      col = columnDefs[_i];
+      newCol = {};
+      for(attr in col) {
+        if(attr==='cellRenderer') {
+          //fn = window[col[attr]];
+          //newCol[attr] = fn;
+          //newCol[attr] = eval(col[attr]);
+          if(col[attr] ==='jmtGridFormatters.testRender') {
+            newCol[attr] = jmtGridFormatters.testRender;
+          }
+          if(col[attr] ==='jmtGridFormatters.numberWithCommas2') {
+            newCol[attr] = jmtGridFormatters.numberWithCommas2;
+          }
+          if(col[attr] ==='jmtGridFormatters.numberWithCommas4') {
+            newCol[attr] = jmtGridFormatters.numberWithCommas4;
+          }
+          if(col[attr] ==='jmtGridFormatters.booleanFormatter') {
+            newCol[attr] = jmtGridFormatters.booleanFormatter;
+          }
+
+        }
+        else {
+          newCol[attr] = col[attr];
+        }
+      }
+      newColDefs.push(newCol);
+    }
+    return newColDefs;
+  };
 
   loadGrid = function(grid, gridOptions) {
     var httpRequest, url;
@@ -125,10 +200,12 @@ var jmtGridEvents = {
     httpRequest.open('GET', url);
     httpRequest.send();
     return httpRequest.onreadystatechange = function() {
-      var httpResult;
+      var httpResult, newColDefs;
       if (httpRequest.readyState === 4 && httpRequest.status === 200) {
         httpResult = JSON.parse(httpRequest.responseText);
-        gridOptions.api.setColumnDefs(httpResult.columnDefs);
+        newColDefs = translateColDefs(httpResult.columnDefs);
+        gridOptions.api.setColumnDefs(newColDefs);
+        //gridOptions.api.setColumnDefs(httpResult.columnDefs);
         return gridOptions.api.setRowData(httpResult.rowDefs);
       }
     };
