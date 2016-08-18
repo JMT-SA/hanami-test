@@ -7,6 +7,7 @@ get '/books/calledback', to: 'books#calledback', as: 'bookback'
 # get '/books', to: 'books#index'
 resources :books, except: :show
 get '/books/grid', to: 'books#grid', as: 'bookgrid'
+get '/print_grid', to: 'grids#print_grid'
 
 get '/hello', to: ->(env) { [200, {}, ['Hello from Hanami!']] }
 get '/blurt', to: ->(env) { [200, {}, [File.read('.ruby-version')]] } # Could make a quick URL to show version/config info

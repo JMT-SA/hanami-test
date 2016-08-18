@@ -6,7 +6,8 @@ module Web::Controllers::Books
 
     def call(params)
       self.format = :json
-      data = DataminerControl.grid_from_dataminer(BookRepository, 'book_index')
+      #data = DataminerControl.grid_from_dataminer(BookRepository, 'book_index')
+      data = DataminerControl.grid_from_dataminer(ExpRepository, 'sp_invoices', limit: 20)
       #TODO: also pass in links, plugin, colour rules, multiselect, grouping, in-grid editing,
       #command button(s) [actually cmd buttons should just be part of the page above the grid.].
 

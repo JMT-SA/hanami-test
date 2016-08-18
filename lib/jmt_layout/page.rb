@@ -57,7 +57,8 @@ module JmtLayout
     end
 
     def render
-      "A string rendered from JmtLayout<br>" << nodes.map {|s| s.render }.join("\n<!-- End Section -->\n")
+      #"A string rendered from JmtLayout<br>" << nodes.map {|s| s.render }.join("\n<!-- End Section -->\n")
+      nodes.map {|s| s.render }.join("\n<!-- End Section -->\n")
     end
   end
 

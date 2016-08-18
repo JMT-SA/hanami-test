@@ -76,6 +76,12 @@ var jmtGridEvents = {
     gridOptions.api.showToolPanel( !isShowing );
   },
 
+  printAGrid: function(grid_id, grid_url) {
+     var disp_setting =  "toolbar=yes,location=no,directories=yes,menubar=yes,";
+         //disp_setting += "scrollbars=yes,width=650, height=600, left=100, top=25";
+    window.open("/print_grid?grid_url="+encodeURIComponent(grid_url), "printGrid", disp_setting);
+  },
+
   quickSearch: function(event) {
     var gridOptions;
     // clear on Esc
@@ -84,6 +90,26 @@ var jmtGridEvents = {
     }
     gridOptions = jmtGridStore.getGrid(event.target.dataset.gridId);
     gridOptions.api.setQuickFilter(event.target.value);
+  },
+
+  // setFilterChangeEvent: function(grid_id) {
+  //   var gridOptions;
+  //
+  //   gridOptions = jmtGridStore.getGrid(grid_id);
+  //   gridOptions.api.afterFilterChanged();
+  //   //.api.rowModel.rootNode.childrenAfterFilter.length
+  //
+  // }
+  showFilterChange: function(grid_id) {
+    var gridOptions, filterLength;
+    gridOptions = jmtGridStore.getGrid(grid_id);
+    if(gridOptions.api.rowModel.rootNode.childrenAfterFilter) {
+      filterLength = gridOptions.api.rowModel.rootNode.childrenAfterFilter.length;
+    }
+    else {
+      filterLength = 0;
+    }
+    console.log('onAfterFilterChanged', filterLength, grid_id);
   }
 
 };
@@ -115,6 +141,7 @@ var jmtGridEvents = {
     for (_i = 0, _len = grids.length; _i < _len; _i++) {
       grid = grids[_i];
       grid_id = grid.getAttribute('id');
+      for_print = grid.dataset.gridPrint;
       // lookup of grid ids? populate here and clear when grid unloaded...
       gridOptions = {
         columnDefs: null,
@@ -126,12 +153,19 @@ var jmtGridEvents = {
         enableRangeSelection: true,
         enableStatusBar: true,
         suppressAggFuncInHeader: true,
+        // onAfterFilterChanged: function() {console.log('onAfterFilterChanged', this.api.rowModel.rootNode.childrenAfterFilter.length, grid_id);}
+        // onAfterFilterChanged: jmtGridEvents.showFilterChange(grid_id)
         //suppressCopyRowsToClipboard: true
         //quickFilterText: 'fred'
       };
+      if(for_print) {
+        gridOptions.forPrint        = true;
+        gridOptions.enableStatusBar = false;
+      }
 
       new agGrid.Grid(grid, gridOptions);
       jmtGridStore.addGrid(grid_id, gridOptions);
+      gridOptions.onAfterFilterChanged = jmtGridEvents.showFilterChange(grid_id);
       _results.push(loadGrid(grid, gridOptions));
     }
     return _results;

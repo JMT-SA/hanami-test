@@ -2,6 +2,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'hanami/setup'
 require_relative '../lib/bookshelf'
+require_relative '../lib/exporter'
 require_relative '../apps/web/application'
 
 # Customised

@@ -8,11 +8,11 @@ class DataminerControl
     col_defs = []
     report.ordered_columns.each do | col|
       # Web::Logger.debug ">>> #{col.name} - #{col.hide}"
-      hs = {headerName: col.caption, field: col.name, hide: col.hide} #, enableRowGroup: col.groupable
-      hs[:width] = col.width unless col.width.nil?
+      hs                  = {headerName: col.caption, field: col.name, hide: col.hide} #, enableRowGroup: col.groupable
+      hs[:width]          = col.width unless col.width.nil?
       hs[:enableRowGroup] = true unless col.name == 'id'
-      hs[:enableValue] = true if col.name == 'id'
-      hs[:aggFunc] = :avg if col.name == 'id'
+      hs[:enableValue]    = true if col.name == 'id'
+      hs[:aggFunc]        = :avg if col.name == 'id'
       # if col.group_sum
       # hs[:enableValue] = true
       # elsif [col.group_avg, col.group_min, col.group_max].any?
@@ -29,20 +29,32 @@ class DataminerControl
       col_defs << hs
     end
 
-    { columnDefs: col_defs,
-      rowDefs: repository.raw_query(report.runnable_sql)}.to_json
+    {
+      columnDefs: col_defs,
+      #rowDefs:    repository.raw_query(report.runnable_sql)
+      rowDefs:    dataminer_query(report.runnable_sql)#repository.raw_query(report.runnable_sql)
+    }.to_json
+  end
+
+  def self.dataminer_query(sql)
+    this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/stargrow')
+    this_db[sql].to_a
   end
 
   def self.dataminer_fetch(repository, file_name, options={})
     report = get_report_with_options(file_name, options)
-    repository.raw_query(report.runnable_sql)
+    this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/stargrow')
+    this_db[report.runnable_sql]
+    #Sequel.connect('postgres://user:password@host:port/database_name'){|db| db[:posts].delete}
+    #repository.raw_query(report.runnable_sql)
   end
 
   private
 
   # Load a YML report.
   def self.get_report(file_name) #TODO:  'bookshelf' should be variable...
-    path     = File.join(Hanami.root, 'lib', 'bookshelf', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
+    #path     = File.join(Hanami.root, 'lib', 'bookshelf', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
+    path     = File.join(Hanami.root, 'lib', 'exporter', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
     rpt_hash = Dataminer::YamlPersistor.new(path)
     Dataminer::Report.load(rpt_hash)
   end
