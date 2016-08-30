@@ -1,11 +1,41 @@
 class DataminerControl
 
+  # Could we store dataminer behaviours in another yml file?
+  # - rules for colours
+  # - rules for links
+  # - etc
+
   #TODO: remove repository.
   #      Should use db connection directly.
   #      ...able to use > 1 database?
   def self.grid_from_dataminer(repository, file_name, options={})
     report = get_report_with_options(file_name, options)
     col_defs = []
+
+    # Get from meta for grid....
+    # hs = {headerName: 'Edit', field: 'id', colId: 'edit_link', cellRenderer: 'jmtGridFormatters.hrefInlineFormatter'}
+    # col_defs << hs
+
+    #hs = {headerName: 'Edit', field: 'id', colId: 'edit_link', cellRenderer: 'jmtGridFormatters.hrefInlineJsFormatter'} # value derive from hash of JSON (url + id field + display value) grid context help here?
+    #hs = {headerName: 'Edit2', valueGetter: "<a href='/books/'+data.id+'/edit'>ed</a>", colId: 'edit_link2'}
+    hs = {headerName: '',
+          width: 60,
+          suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false,
+          valueGetter: "'/books/' + data.id + '/edit|edit'", colId: 'edit_link2', cellRenderer: 'jmtGridFormatters.hrefSimpleFormatter'}
+    #hs = {headerName: 'Edit2', field: 'id', valueGetter: "'/books/' + data.id + '/edit|' + data.id", colId: 'edit_link2', cellRenderer: 'jmtGridFormatters.hrefSimpleFormatter'}
+    # 1: with text, 2: with data value...
+    col_defs << hs
+
+    # TODO: Delete - with prompt and DELETE method, not GET!
+    hs = {headerName: '',
+          width: 60,
+          suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false,
+          valueGetter: "'/books/' + data.id + '|delete|Are you sure?'", colId: 'delete_link', cellRenderer: 'jmtGridFormatters.hrefPromptFormatter'}
+    col_defs << hs
+    
+
+    #TODO: ActionColumns and menu. Use context for link text? - keep out of valueGetters?
+
     report.ordered_columns.each do | col|
       # Web::Logger.debug ">>> #{col.name} - #{col.hide}"
       hs                  = {headerName: col.caption, field: col.name, hide: col.hide, headerTooltip: col.caption} #, enableRowGroup: col.groupable
@@ -49,13 +79,9 @@ class DataminerControl
         hs[:cellClass]    = 'grid-boolean-column'
         hs[:width]        = 100 if col.width.nil?
       end
-      #hs[:cellClassRules] = {"'grid-row-red'": "x === 'EUR'"} if col.name == 'currency_code' .... not working...
-#     'rag-green-outer': function(params) { return params.value === 2008},
-#     'rag-amber-outer': function(params) { return params.value === 2004},
-#     'rag-red-outer': function(params) { return params.value === 2000}
-# },
-      #puts ">>> #{col.format.class}" if col.name == 'total_amount'
-      #hs[:cellRenderer] = 'jmtGridFormatters.testRender' if col.name == 'total_amount'
+
+      hs[:cellClassRules] = {"grid-row-red": "x === 'Fred'"} if col.name == 'author'
+
       col_defs << hs
     end
 
@@ -83,7 +109,8 @@ class DataminerControl
   end
 
   def self.dataminer_query(sql)
-    this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/stargrow')
+    this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/bookshelf_development')
+    #this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/stargrow')
     #this_db[sql].to_a
     # Need to convert all BigDecimal to float for JSON (otherwise the aggregations don't work because amounts are returned as 0.1126673E5)
     # - Need to do some checking that the resulting float is an accurate representation of the decimal...
@@ -92,7 +119,8 @@ class DataminerControl
 
   def self.dataminer_fetch(repository, file_name, options={})
     report = get_report_with_options(file_name, options)
-    this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/stargrow')
+    this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/bookshelf_development')
+     #this_db = Sequel.connect('postgres://postgres:postgres@localhost:5432/stargrow')
     this_db[report.runnable_sql]
     #Sequel.connect('postgres://user:password@host:port/database_name'){|db| db[:posts].delete}
     #repository.raw_query(report.runnable_sql)
@@ -102,8 +130,8 @@ class DataminerControl
 
   # Load a YML report.
   def self.get_report(file_name) #TODO:  'bookshelf' should be variable...
-    #path     = File.join(Hanami.root, 'lib', 'bookshelf', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
-    path     = File.join(Hanami.root, 'lib', 'exporter', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
+    path     = File.join(Hanami.root, 'lib', 'bookshelf', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
+    #path     = File.join(Hanami.root, 'lib', 'exporter', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
     rpt_hash = Dataminer::YamlPersistor.new(path)
     Dataminer::Report.load(rpt_hash)
   end

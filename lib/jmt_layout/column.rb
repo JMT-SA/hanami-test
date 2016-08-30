@@ -35,6 +35,8 @@ module JmtLayout
       @nodes << Grid.new(page_config, grid_id, url, options)
     end
 
+    #TODO: add_link; add_link_collection
+
     def add_node(node)
       @nodes << node
     end

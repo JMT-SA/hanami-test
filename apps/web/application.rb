@@ -226,12 +226,20 @@ module Web
       #
       #  * https://developer.mozilla.org/en-US/docs/Web/Security/CSP/CSP_policy_directives
       #
+      #
+      #
+      # *****************************************************************************************************
+      # NB: For AG Grid to be able to translate valueGetter from a string, we MUST specify unsafe-eval below.
+      #     We do not want to do this if we can - to avoid any JS eval code.
+      #     i.e. REMOVE unsafe-eval if the valueGetter issue can be resolved properly.
+      # *****************************************************************************************************
+      #
       security.content_security_policy %{
         form-action 'self';
         frame-ancestors 'self';
         base-uri 'self';
         default-src 'none';
-        script-src 'self' 'unsafe-inline';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval';
         connect-src 'self';
         img-src 'self' https: data:;
         style-src 'self' 'unsafe-inline' https:;

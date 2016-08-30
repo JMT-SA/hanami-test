@@ -110,6 +110,23 @@ var jmtGridEvents = {
       filterLength = 0;
     }
     console.log('onAfterFilterChanged', filterLength, grid_id);
+  },
+
+  promptClick: function(target) {
+    var target = event.target;
+    var prompt = target.dataset.prompt,
+        url    = target.dataset.url,
+        method = target.dataset.method;
+
+    if (confirm(prompt)) {
+      console.log('YES: ', url, method);
+    } else {
+      console.log('NO: ', url, method);
+    }
+    //TODO: make call via AJAX & reload grid? Or http to server to figure it out?.....
+    //ALSO: disable link automatically while call is being processed...
+    event.stopPropagation();
+    event.preventDefault();
   }
 
 };
@@ -151,7 +168,31 @@ var jmtGridFormatters = {
     else {
       return "<span class='ac_icon_uncheck'>&nbsp;</span>";
     }
+  },
+
+  hrefInlineFormatter: function(params) {
+    //var rainPerTenMm = params.value / 10;
+    return "<a href='/books/"+params.value+"/edit'>edit</a>";
+  },
+
+  hrefSimpleFormatter: function(params) {
+    var val = params.value;
+    return "<a href='"+val.split('|')[0]+"'>"+val.split('|')[1]+"</a>";
+  },
+
+  hrefPromptFormatter: function(params) {
+    var val = params.value.split('|');
+    //TODO: listener for click - with data attr for prompt text.
+    // if (confirm('Are you sure you want to save this thing into the database?')) {
+    //     // Save it!
+    // } else {
+    //     // Do nothing!
+    // }
+    //prompt(val[2]);
+    //return "<a href='"+val[0]+"'>"+val[1]+"</a>";
+    return "<a href='#' data-prompt='"+val[2]+"' data-method='DELETE' data-url='"+val[0]+"' onclick='jmtGridEvents.promptClick();'>"+val[1]+"</a>";
   }
+
 
 };
 
@@ -182,6 +223,15 @@ var jmtGridFormatters = {
           if(col[attr] ==='jmtGridFormatters.booleanFormatter') {
             newCol[attr] = jmtGridFormatters.booleanFormatter;
           }
+          if(col[attr] ==='jmtGridFormatters.hrefInlineFormatter') {
+            newCol[attr] = jmtGridFormatters.hrefInlineFormatter;
+          }
+          if(col[attr] ==='jmtGridFormatters.hrefSimpleFormatter') {
+            newCol[attr] = jmtGridFormatters.hrefSimpleFormatter;
+          }
+          if(col[attr] ==='jmtGridFormatters.hrefPromptFormatter') {
+            newCol[attr] = jmtGridFormatters.hrefPromptFormatter;
+          }
 
         }
         else {
@@ -205,16 +255,16 @@ var jmtGridFormatters = {
         httpResult = JSON.parse(httpRequest.responseText);
         newColDefs = translateColDefs(httpResult.columnDefs);
         gridOptions.api.setColumnDefs(newColDefs);
-        //gridOptions.api.setColumnDefs(httpResult.columnDefs);
-        return gridOptions.api.setRowData(httpResult.rowDefs);
+        gridOptions.api.setRowData(httpResult.rowDefs);
       }
     };
   };
 
+  //document.addEventListener(eventName, eventHandler);
   document.addEventListener("DOMContentLoaded", function() {
     var grid, gridOptions, grids, _i, _len, _results, grid_id;
     grids = document.querySelectorAll('[data-grid]');
-    _results = [];
+    //_results = [];
     for (_i = 0, _len = grids.length; _i < _len; _i++) {
       grid = grids[_i];
       grid_id = grid.getAttribute('id');
@@ -243,9 +293,10 @@ var jmtGridFormatters = {
       new agGrid.Grid(grid, gridOptions);
       jmtGridStore.addGrid(grid_id, gridOptions);
       gridOptions.onAfterFilterChanged = jmtGridEvents.showFilterChange(grid_id);
-      _results.push(loadGrid(grid, gridOptions));
+      //_results.push(loadGrid(grid, gridOptions));
+      loadGrid(grid, gridOptions);
     }
-    return _results;
+    //return _results;
   });
 
 }).call(this);

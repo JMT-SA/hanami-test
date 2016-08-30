@@ -5,9 +5,13 @@ module Web::Controllers::Books
     # expose :hs
 
     def call(params)
+      # These two lines just for calling from test file.
+      # headers["Access-Control-Allow-Origin"] = '*'
+      # headers["Access-Control-Request-Method"] = '*'
+
       self.format = :json
-      #data = DataminerControl.grid_from_dataminer(BookRepository, 'book_index')
-      data = DataminerControl.grid_from_dataminer(ExpRepository, 'sp_invoices', limit: 20)
+      data = DataminerControl.grid_from_dataminer(BookRepository, 'book_index')
+      #data = DataminerControl.grid_from_dataminer(ExpRepository, 'sp_invoices', limit: 20)
       #TODO: also pass in links, plugin, colour rules, multiselect, grouping, in-grid editing,
       #command button(s) [actually cmd buttons should just be part of the page above the grid.].
 
