@@ -14,7 +14,7 @@ var jmtGridStore = {
     return this.gridStore[gridId];
   },
 
-  removeGrid(gridId) {
+  removeGrid: function(gridId) {
     this.gridStore[gridId].api.destroy();
     delete this.gridStore[gridId];
   },
@@ -32,10 +32,23 @@ var jmtGridStore = {
 var jmtGridEvents = {
 
   csvExport: function(grid_id, file_name) {
-    var gridOptions,
+    var visibleCols, colKeys = [], gridOptions;
 
-    params = {
-      fileName: file_name
+    // Get visible columns that do not explicitly have "suppressCsvExport" set.
+    gridOptions = jmtGridStore.getGrid(grid_id);
+    visibleCols = gridOptions.columnApi.getAllDisplayedColumns();
+
+    for (_i = 0, _len = visibleCols.length; _i < _len; _i++) {
+      if(visibleCols[_i].colDef.suppressCsvExport && visibleCols[_i].colDef.suppressCsvExport === true) {
+      }
+      else {
+        colKeys.push(visibleCols[_i].colId);
+      }
+    }
+
+    var params = {
+      fileName: file_name,
+      columnKeys: colKeys // Visible, non-suppressed columns.
       // skipHeader: true,
       // skipFooters: true,
       // skipGroups: true,
@@ -65,7 +78,6 @@ var jmtGridEvents = {
       }
     };
 
-    gridOptions = jmtGridStore.getGrid(grid_id);
     gridOptions.api.exportDataAsCsv(params);
   },
 

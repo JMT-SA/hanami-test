@@ -20,7 +20,7 @@ class DataminerControl
     #hs = {headerName: 'Edit2', valueGetter: "<a href='/books/'+data.id+'/edit'>ed</a>", colId: 'edit_link2'}
     hs = {headerName: '',
           width: 60,
-          suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false,
+          suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true,
           valueGetter: "'/books/' + data.id + '/edit|edit'", colId: 'edit_link2', cellRenderer: 'jmtGridFormatters.hrefSimpleFormatter'}
     #hs = {headerName: 'Edit2', field: 'id', valueGetter: "'/books/' + data.id + '/edit|' + data.id", colId: 'edit_link2', cellRenderer: 'jmtGridFormatters.hrefSimpleFormatter'}
     # 1: with text, 2: with data value...
@@ -29,7 +29,7 @@ class DataminerControl
     # TODO: Delete - with prompt and DELETE method, not GET!
     hs = {headerName: '',
           width: 60,
-          suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false,
+          suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true,
           valueGetter: "'/books/' + data.id + '|delete|Are you sure?'", colId: 'delete_link', cellRenderer: 'jmtGridFormatters.hrefPromptFormatter'}
     col_defs << hs
     
