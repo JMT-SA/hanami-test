@@ -4,6 +4,11 @@ PATH
     dataminer (0.1.0)
       pg_query
 
+PATH
+  remote: /home/james/ra/floating_canvas/floating_canvas-layout
+  specs:
+    floating_canvas-layout (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -124,6 +129,7 @@ DEPENDENCIES
   capybara
   dataminer!
   dotenv (~> 2.0)
+  floating_canvas-layout!
   hanami (~> 0.8)
   hanami-model (~> 0.6)
   minitest
@@ -133,4 +139,4 @@ DEPENDENCIES
   shotgun
 
 BUNDLED WITH
-   1.11.2
+   1.13.0

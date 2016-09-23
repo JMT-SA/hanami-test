@@ -8,6 +8,7 @@ gem 'hanami-model', '~> 0.6'
 gem 'sass'
 
 gem 'dataminer', path: '/home/james/ra/dm_tests/dataminer'
+gem 'floating_canvas-layout', path: '/home/james/ra/floating_canvas/floating_canvas-layout'
 
 group :development do
   # Code reloading

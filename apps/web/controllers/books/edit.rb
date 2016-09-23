@@ -10,7 +10,8 @@ module Web::Controllers::Books
       # puts ">>> eID: #{params[:id]}"
       # @book = BookRepository.find(params[:id])
       book = BookRepository.find(params[:id])
-      @jmt_layout = JmtLayout::Page.new form_object: book, name: 'book'
+      # @jmt_layout = JmtLayout::Page.new form_object: book, name: 'book'
+      @jmt_layout = FloatingCanvas::Layout::Page.new form_object: book, name: 'book'
     end
   end
 end
