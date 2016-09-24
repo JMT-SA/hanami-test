@@ -6,5 +6,19 @@ require './config/environment'
 # map '/frame3' do
 #   use ApplicationController
 # end
+#require 'floating_canvas/webtest'
 
-run Hanami::Container.new
+# map '/frame_sin' do
+#   use FloatingCanvas::Webtest::MySinatraApp
+# end
+# config.ru
+#map '/sinatra' do
+map "/#{ENV['DM_PREFIX']}" do #Where to mount dataminer
+  run FloatingCanvas::Webtest::MySinatraApp.new
+end
+
+map '/' do
+  run Hanami::Container.new
+end
+
+#run Hanami::Container.new

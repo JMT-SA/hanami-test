@@ -14,6 +14,7 @@ get '/blurt', to: ->(env) { [200, {}, [File.read('.ruby-version')]] } # Could ma
 
 # mount SinatraApp.new, at: '/sinatra'
 #mount Frame2.app, at: '/frame2'
+#mount FloatingCanvas::Webtest::MySinatraApp.new, at: '/sinatra'
 
 get '/', to: 'home#index'
 # See: http://www.rubydoc.info/gems/hanami-router/#Usage
