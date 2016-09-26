@@ -9,7 +9,7 @@ gem 'sass'
 
 gem 'dataminer', path: '/home/james/ra/dm_tests/dataminer'
 gem 'floating_canvas-layout', path: '/home/james/ra/floating_canvas/floating_canvas-layout'
-gem 'floating_canvas-webtest', path: '/home/james/ra/floating_canvas/floating_canvas-webtest'
+gem 'floating_canvas-dataminer_portal', path: '/home/james/ra/floating_canvas/floating_canvas-dataminer_portal'
 
 group :development do
   # Code reloading

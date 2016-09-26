@@ -1,0 +1,5 @@
+appname: Sinatra DEFAULT development
+database:
+  name: exporter
+  user: postgres
+  password: postgres
