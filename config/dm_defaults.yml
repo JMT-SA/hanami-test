@@ -3,3 +3,4 @@ database:
   name: exporter
   user: postgres
   password: postgres
+dm_reports_location: lib/exporter/dataminer_sources
