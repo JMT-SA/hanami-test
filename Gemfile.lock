@@ -1,13 +1,7 @@
 PATH
-  remote: /home/james/ra/dm_tests/dataminer
+  remote: /home/james/ra/crossbeams/crossbeams-dataminer_portal
   specs:
-    dataminer (0.1.0)
-      pg_query
-
-PATH
-  remote: /home/james/ra/floating_canvas/floating_canvas-dataminer_portal
-  specs:
-    floating_canvas-dataminer_portal (0.1.0)
+    crossbeams-dataminer_portal (0.1.0)
       dataminer
       pg
       rouge
@@ -16,9 +10,15 @@ PATH
       sinatra-contrib
 
 PATH
-  remote: /home/james/ra/floating_canvas/floating_canvas-layout
+  remote: /home/james/ra/crossbeams/crossbeams-layout
   specs:
-    floating_canvas-layout (0.1.0)
+    crossbeams-layout (0.1.0)
+
+PATH
+  remote: /home/james/ra/dm_tests/dataminer
+  specs:
+    dataminer (0.1.0)
+      pg_query
 
 GEM
   remote: https://rubygems.org/
@@ -155,10 +155,10 @@ PLATFORMS
 DEPENDENCIES
   bundler
   capybara
+  crossbeams-dataminer_portal!
+  crossbeams-layout!
   dataminer!
   dotenv (~> 2.0)
-  floating_canvas-dataminer_portal!
-  floating_canvas-layout!
   hanami (~> 0.8)
   hanami-model (~> 0.6)
   minitest

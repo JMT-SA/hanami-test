@@ -8,8 +8,8 @@ gem 'hanami-model', '~> 0.6'
 gem 'sass'
 
 gem 'dataminer', path: '/home/james/ra/dm_tests/dataminer'
-gem 'floating_canvas-layout', path: '/home/james/ra/floating_canvas/floating_canvas-layout'
-gem 'floating_canvas-dataminer_portal', path: '/home/james/ra/floating_canvas/floating_canvas-dataminer_portal'
+gem 'crossbeams-layout', path: '/home/james/ra/crossbeams/crossbeams-layout'
+gem 'crossbeams-dataminer_portal', path: '/home/james/ra/crossbeams/crossbeams-dataminer_portal'
 
 group :development do
   # Code reloading

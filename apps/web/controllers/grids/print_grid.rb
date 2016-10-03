@@ -6,7 +6,7 @@ module Web::Controllers::Grids
 
     def call(params)
       # @jmt_layout = JmtLayout::Page.new grid_url: params[:grid_url]
-      @jmt_layout = FloatingCanvas::Layout::Page.new grid_url: params[:grid_url]
+      @jmt_layout = Crossbeams::Layout::Page.new grid_url: params[:grid_url]
     end
 
   end
