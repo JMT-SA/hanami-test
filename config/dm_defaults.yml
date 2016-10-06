@@ -4,3 +4,5 @@ database:
   user: postgres
   password: postgres
 dm_reports_location: lib/exporter/dataminer_sources
+dm_js_location: assets
+dm_css_location: assets
