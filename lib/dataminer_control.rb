@@ -132,8 +132,8 @@ class DataminerControl
   def self.get_report(file_name) #TODO:  'bookshelf' should be variable...
     path     = File.join(Hanami.root, 'lib', 'bookshelf', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
     #path     = File.join(Hanami.root, 'lib', 'exporter', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
-    rpt_hash = Dataminer::YamlPersistor.new(path)
-    Dataminer::Report.load(rpt_hash)
+    rpt_hash = Crossbeams::Dataminer::YamlPersistor.new(path)
+    Crossbeams::Dataminer::Report.load(rpt_hash)
   end
 
   # Set up a YML-loaded report with options.
@@ -159,9 +159,9 @@ class DataminerControl
       param_def  = report.parameter_definition(param_name)
 
       if param_def.nil?
-        parms << Dataminer::QueryParameter.new(param_name, Dataminer::OperatorValue.new(oper, value, data_type))
+        parms << Crossbeams::Dataminer::QueryParameter.new(param_name, Crossbeams::Dataminer::OperatorValue.new(oper, value, data_type))
       else
-        parms << Dataminer::QueryParameter.from_definition(param_def, Dataminer::OperatorValue.new(oper, value, data_type))
+        parms << Crossbeams::Dataminer::QueryParameter.from_definition(param_def, Crossbeams::Dataminer::OperatorValue.new(oper, value, data_type))
       end
     end
     report.apply_params(parms) unless parms.empty?

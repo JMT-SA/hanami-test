@@ -2,7 +2,7 @@ PATH
   remote: /home/james/ra/crossbeams/crossbeams-dataminer_portal
   specs:
     crossbeams-dataminer_portal (0.1.0)
-      dataminer
+      crossbeams-dataminer
       pg
       rouge
       sequel
@@ -10,15 +10,15 @@ PATH
       sinatra-contrib
 
 PATH
+  remote: /home/james/ra/crossbeams/crossbeams-dataminer
+  specs:
+    crossbeams-dataminer (0.1.0)
+      pg_query
+
+PATH
   remote: /home/james/ra/crossbeams/crossbeams-layout
   specs:
     crossbeams-layout (0.1.0)
-
-PATH
-  remote: /home/james/ra/dm_tests/dataminer
-  specs:
-    dataminer (0.1.0)
-      pg_query
 
 GEM
   remote: https://rubygems.org/
@@ -155,9 +155,9 @@ PLATFORMS
 DEPENDENCIES
   bundler
   capybara
+  crossbeams-dataminer!
   crossbeams-dataminer_portal!
   crossbeams-layout!
-  dataminer!
   dotenv (~> 2.0)
   hanami (~> 0.8)
   hanami-model (~> 0.6)

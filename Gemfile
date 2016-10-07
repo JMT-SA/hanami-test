@@ -7,7 +7,7 @@ gem 'hanami-model', '~> 0.6'
 
 gem 'sass'
 
-gem 'dataminer', path: '/home/james/ra/dm_tests/dataminer'
+gem 'crossbeams-dataminer', path: '/home/james/ra/crossbeams/crossbeams-dataminer'
 gem 'crossbeams-layout', path: '/home/james/ra/crossbeams/crossbeams-layout'
 gem 'crossbeams-dataminer_portal', path: '/home/james/ra/crossbeams/crossbeams-dataminer_portal'
 
