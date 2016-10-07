@@ -3,9 +3,9 @@ module Web::Views::Books
     include Web::View
     template 'home/jstest'
 
-    def jmt_layout
+    def crossbeams_layout
       #puts Hanami.env
-      locals[:jmt_layout].with_form do |form, page_config|
+      locals[:crossbeams_layout].with_form do |form, page_config|
 
           form.action routes.book_path(id: page_config.form_object.id)
           # form.action routes.book_path(id: book.id)
@@ -16,7 +16,7 @@ module Web::Views::Books
           # form.row do |row|
           # end
       end
-      # locals[:jmt_layout].build do |page, page_config|
+      # locals[:crossbeams_layout].build do |page, page_config|
       #
       #   page.form do |form|
       #     form.action routes.book_path(id: page_config.form_object.id)

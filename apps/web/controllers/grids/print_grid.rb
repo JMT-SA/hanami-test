@@ -2,11 +2,10 @@ module Web::Controllers::Grids
   class PrintGrid
     include Web::Action
 
-    expose :jmt_layout
+    expose :crossbeams_layout
 
     def call(params)
-      # @jmt_layout = JmtLayout::Page.new grid_url: params[:grid_url]
-      @jmt_layout = Crossbeams::Layout::Page.new grid_url: params[:grid_url]
+      @crossbeams_layout = Crossbeams::Layout::Page.new grid_url: params[:grid_url]
     end
 
   end

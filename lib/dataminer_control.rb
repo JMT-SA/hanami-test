@@ -13,16 +13,16 @@ class DataminerControl
     col_defs = []
 
     # Get from meta for grid....
-    # hs = {headerName: 'Edit', field: 'id', colId: 'edit_link', cellRenderer: 'jmtGridFormatters.hrefInlineFormatter'}
+    # hs = {headerName: 'Edit', field: 'id', colId: 'edit_link', cellRenderer: 'crossbeamsGridFormatters.hrefInlineFormatter'}
     # col_defs << hs
 
-    #hs = {headerName: 'Edit', field: 'id', colId: 'edit_link', cellRenderer: 'jmtGridFormatters.hrefInlineJsFormatter'} # value derive from hash of JSON (url + id field + display value) grid context help here?
+    #hs = {headerName: 'Edit', field: 'id', colId: 'edit_link', cellRenderer: 'crossbeamsGridFormatters.hrefInlineJsFormatter'} # value derive from hash of JSON (url + id field + display value) grid context help here?
     #hs = {headerName: 'Edit2', valueGetter: "<a href='/books/'+data.id+'/edit'>ed</a>", colId: 'edit_link2'}
     hs = {headerName: '',
           width: 60,
           suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true,
-          valueGetter: "'/books/' + data.id + '/edit|edit'", colId: 'edit_link2', cellRenderer: 'jmtGridFormatters.hrefSimpleFormatter'}
-    #hs = {headerName: 'Edit2', field: 'id', valueGetter: "'/books/' + data.id + '/edit|' + data.id", colId: 'edit_link2', cellRenderer: 'jmtGridFormatters.hrefSimpleFormatter'}
+          valueGetter: "'/books/' + data.id + '/edit|edit'", colId: 'edit_link2', cellRenderer: 'crossbeamsGridFormatters.hrefSimpleFormatter'}
+    #hs = {headerName: 'Edit2', field: 'id', valueGetter: "'/books/' + data.id + '/edit|' + data.id", colId: 'edit_link2', cellRenderer: 'crossbeamsGridFormatters.hrefSimpleFormatter'}
     # 1: with text, 2: with data value...
     col_defs << hs
 
@@ -30,7 +30,7 @@ class DataminerControl
     hs = {headerName: '',
           width: 60,
           suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true,
-          valueGetter: "'/books/' + data.id + '|delete|Are you sure?'", colId: 'delete_link', cellRenderer: 'jmtGridFormatters.hrefPromptFormatter'}
+          valueGetter: "'/books/' + data.id + '|delete|Are you sure?'", colId: 'delete_link', cellRenderer: 'crossbeamsGridFormatters.hrefPromptFormatter'}
     col_defs << hs
     
 
@@ -61,7 +61,7 @@ class DataminerControl
       #     ### count ?????
       #   end
       #
-      #total_amount: jmtGridFormatters.numberWithCommas2
+      #total_amount: crossbeamsGridFormatters.numberWithCommas2
       # integer, number, date and boolean.
       if [:integer, :number].include?(col.data_type)
         hs[:cellClass] = 'grid-number-column'
@@ -69,13 +69,13 @@ class DataminerControl
         hs[:width]     = 120 if col.width.nil? && col.data_type == :number
       end
       if col.format == :delimited_1000
-        hs[:cellRenderer] = 'jmtGridFormatters.numberWithCommas2'
+        hs[:cellRenderer] = 'crossbeamsGridFormatters.numberWithCommas2'
       end
       if col.format == :delimited_1000_4
-        hs[:cellRenderer] = 'jmtGridFormatters.numberWithCommas4'
+        hs[:cellRenderer] = 'crossbeamsGridFormatters.numberWithCommas4'
       end
       if col.data_type == :boolean
-        hs[:cellRenderer] = 'jmtGridFormatters.booleanFormatter'
+        hs[:cellRenderer] = 'crossbeamsGridFormatters.booleanFormatter'
         hs[:cellClass]    = 'grid-boolean-column'
         hs[:width]        = 100 if col.width.nil?
       end

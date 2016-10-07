@@ -3,8 +3,8 @@ module Web::Views::Books
     include Web::View
     template 'home/jstest'
 
-    def jmt_layout
-      locals[:jmt_layout].build do |page|
+    def crossbeams_layout
+      locals[:crossbeams_layout].build do |page|
 
         page.section do |sect|
           sect.caption = 'Section One'

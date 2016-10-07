@@ -12,12 +12,12 @@
     <meta name="theme-color" content="#8bd98b">
     <meta name="viewport" content="width=device-width", initial-scale=1 />
     <title>Bookshelf</title>
-    <%= stylesheet 'pure', 'grids-responsive', 'jmt_layout' %>
+    <%= stylesheet 'pure', 'grids-responsive', 'crossbeams-layout' %>
   </head>
   <body>
     <h1>Bookshelf</h1>
     <%= link_to 'Books', routes.books_path %> | <%= link_to 'Contained Books', routes.bookcontainer_path %>
     <%= yield %>
-    <%= javascript 'ag-grid-enterprise', 'crossbeams_utils', 'jmt_layout', 'jmt-grid-loader' %>
+    <%= javascript 'ag-grid-enterprise', 'crossbeams_utils', 'crossbeams-layout', 'crossbeams-grid-loader' %>
   </body>
 </html>

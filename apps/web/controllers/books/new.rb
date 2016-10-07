@@ -2,11 +2,10 @@ module Web::Controllers::Books
   class New
     include Web::Action
 
-    expose :jmt_layout
+    expose :crossbeams_layout
 
     def call(params)
-      # @jmt_layout = JmtLayout::Page.build do |page|
-      @jmt_layout = Crossbeams::Layout::Page.build do |page|
+      @crossbeams_layout = Crossbeams::Layout::Page.build do |page|
         page.form_object Book.new
         page.form do |form|
           form.action routes.books_path

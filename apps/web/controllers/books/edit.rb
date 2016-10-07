@@ -2,7 +2,7 @@ module Web::Controllers::Books
   class Edit
     include Web::Action
 
-    expose :jmt_layout
+    expose :crossbeams_layout
     # expose :book
 
     def call(params)
@@ -10,8 +10,7 @@ module Web::Controllers::Books
       # puts ">>> eID: #{params[:id]}"
       # @book = BookRepository.find(params[:id])
       book = BookRepository.find(params[:id])
-      # @jmt_layout = JmtLayout::Page.new form_object: book, name: 'book'
-      @jmt_layout = Crossbeams::Layout::Page.new form_object: book, name: 'book'
+      @crossbeams_layout = Crossbeams::Layout::Page.new form_object: book, name: 'book'
     end
   end
 end

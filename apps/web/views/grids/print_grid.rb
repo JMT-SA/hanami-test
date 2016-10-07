@@ -4,10 +4,10 @@ module Web::Views::Grids
     layout 'print'
     template 'home/jsprint'
 
-    def jmt_layout
-      locals[:jmt_layout].build do |page|
+    def crossbeams_layout
+      locals[:crossbeams_layout].build do |page|
 
-        page.add_grid('jmtPrintGrid', nil, caption: 'All Books', for_print: true)
+        page.add_grid('crossbeamsPrintGrid', nil, caption: 'All Books', for_print: true)
 
       end
     end
