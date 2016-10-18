@@ -1,5 +1,3 @@
-// AG Grid enterprise license:
-agGrid.LicenseManager.setLicenseKey("J&J_Multi-Tier_Kromco_Packhouse_Solution_1Devs_15_August_2017__MTUwMjc1MTYwMDAwMA==6d25bb000cc39a1b1b5692e0e64952b9");
 
 // Object to keep track of the grids in a page - so they can be looked up by div id.
 var crossbeamsGridStore = {
@@ -131,9 +129,9 @@ var crossbeamsGridEvents = {
         method = target.dataset.method;
 
     if (confirm(prompt)) {
-      console.log('YES: ', url, method);
-    } else {
-      console.log('NO: ', url, method);
+      document.body.innerHTML += '<form id="dynForm" action="' + url +
+        '" method="post"><input name="_method" type="hidden" value="'+method+'" /></form>';
+      document.getElementById("dynForm").submit();
     }
     //TODO: make call via AJAX & reload grid? Or http to server to figure it out?.....
     //ALSO: disable link automatically while call is being processed...
@@ -152,6 +150,7 @@ var crossbeamsGridFormatters = {
   numberWithCommas2: function (params) {
     var x = params.value;
     if (typeof x === 'string') { x = parseFloat(x); }
+    if (isNaN(x)) { return ''; }
     x = Math.round((x + 0.00001) * 100) / 100 // Round to 2 digits if longer.
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -164,6 +163,7 @@ var crossbeamsGridFormatters = {
   numberWithCommas4: function (params) {
     var x = params.value;
     if (typeof x === 'string') { x = parseFloat(x); }
+    if (isNaN(x)) { return ''; }
     x = Math.round((x + 0.0000001) * 10000) / 10000 // Round to 4 digits if longer.
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -192,21 +192,87 @@ var crossbeamsGridFormatters = {
     return "<a href='"+val.split('|')[0]+"'>"+val.split('|')[1]+"</a>";
   },
 
+  // Creates a link that when clicked prompts for a yes/no answer.
+  // Column value is in the format "url|link_text|prompt|method".
+  // Only url and link_text are required.
   hrefPromptFormatter: function(params) {
-    var val = params.value.split('|');
-    //TODO: listener for click - with data attr for prompt text.
-    // if (confirm('Are you sure you want to save this thing into the database?')) {
-    //     // Save it!
-    // } else {
-    //     // Do nothing!
-    // }
-    //prompt(val[2]);
-    //return "<a href='"+val[0]+"'>"+val[1]+"</a>";
-    return "<a href='#' data-prompt='"+val[2]+"' data-method='DELETE' data-url='"+val[0]+"' onclick='crossbeamsGridEvents.promptClick();'>"+val[1]+"</a>";
+    var url, link_text, prompt, method;
+    [url, link_text, prompt, method] = params.value.split('|');
+    prompt = prompt || 'Are you sure?';
+    method = (method || 'post').toLowerCase();
+    return "<a href='#' data-prompt='"+prompt+"' data-method='"+method+"' data-url='"+url+
+           "' onclick='crossbeamsGridEvents.promptClick();'>"+link_text+"</a>";
   }
 
 
 };
+
+// function to act as a class
+function NumericCellEditor() {
+}
+
+// gets called once before the renderer is used
+NumericCellEditor.prototype.init = function (params) {
+    // create the cell
+    this.eInput = document.createElement('input');
+    this.eInput.value = crossbeamsUtils.isCharNumeric(params.charPress) ? params.charPress : params.value;
+
+    var that = this;
+    this.eInput.addEventListener('keypress', function (event) {
+        if (!crossbeamsUtils.isKeyPressedNumeric(event)) {
+            that.eInput.focus();
+            if (event.preventDefault) event.preventDefault();
+        }
+    });
+
+    // only start edit if key pressed is a number, not a letter
+    var charPressIsNotANumber = params.charPress && ('1234567890'.indexOf(params.charPress) < 0);
+    this.cancelBeforeStart = charPressIsNotANumber;
+};
+
+// gets called once when grid ready to insert the element
+NumericCellEditor.prototype.getGui = function () {
+    return this.eInput;
+};
+
+// focus and select can be done after the gui is attached
+NumericCellEditor.prototype.afterGuiAttached = function () {
+    this.eInput.focus();
+};
+
+// returns the new value after editing
+NumericCellEditor.prototype.isCancelBeforeStart = function () {
+    return this.cancelBeforeStart;
+};
+
+// example - will reject the number if it contains the value 007
+// - not very practical, but demonstrates the method.
+NumericCellEditor.prototype.isCancelAfterEnd = function () {
+    // var value = this.getValue();
+    // return value.indexOf('007') >= 0;
+};
+
+// returns the new value after editing
+NumericCellEditor.prototype.getValue = function () {
+    if(this.eInput.value === '') {
+      return '';
+    }
+  else {
+    return parseInt(this.eInput.value);
+  }
+};
+
+// any cleanup we need to be done here
+NumericCellEditor.prototype.destroy = function () {
+    // but this example is simple, no cleanup, we could  even leave this method out as it's optional
+};
+
+// if true, then this editor will appear in a popup
+NumericCellEditor.prototype.isPopup = function () {
+    // and we could leave this method out also, false is the default
+    return false;
+};
+
 
 (function() {
   var loadGrid;
@@ -247,7 +313,16 @@ var crossbeamsGridFormatters = {
 
         }
         else {
-          newCol[attr] = col[attr];
+          if(attr==='cellEditor') {
+            console.log('edit');
+            if(col[attr] ==='NumericCellEditor') {
+            console.log('edit - NUM');
+              newCol[attr] = NumericCellEditor;
+            }
+          }
+          else {
+            newCol[attr] = col[attr];
+          }
         }
       }
       newColDefs.push(newCol);

@@ -11,6 +11,7 @@ class DataminerControl
   def self.grid_from_dataminer(repository, file_name, options={})
     report = get_report_with_options(file_name, options)
     col_defs = []
+    #TODO: ::::::::: pivot....
 
     # Get from meta for grid....
     # hs = {headerName: 'Edit', field: 'id', colId: 'edit_link', cellRenderer: 'crossbeamsGridFormatters.hrefInlineFormatter'}
@@ -20,7 +21,7 @@ class DataminerControl
     #hs = {headerName: 'Edit2', valueGetter: "<a href='/books/'+data.id+'/edit'>ed</a>", colId: 'edit_link2'}
     hs = {headerName: '',
           width: 60,
-          suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true,
+          suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true, suppressToolPanel: true,
           valueGetter: "'/books/' + data.id + '/edit|edit'", colId: 'edit_link2', cellRenderer: 'crossbeamsGridFormatters.hrefSimpleFormatter'}
     #hs = {headerName: 'Edit2', field: 'id', valueGetter: "'/books/' + data.id + '/edit|' + data.id", colId: 'edit_link2', cellRenderer: 'crossbeamsGridFormatters.hrefSimpleFormatter'}
     # 1: with text, 2: with data value...
@@ -44,7 +45,8 @@ class DataminerControl
       #hs[:enableValue]    = true unless agg_func.nil?
       hs[:enableValue]    = true if [:integer, :number].include?(col.data_type)
       #hs[:aggFunc]        = agg_func unless agg_func.nil? || agg_func == :sum
-      hs[:enableRowGroup] = true unless hs[:enableValue]
+      hs[:enableRowGroup] = true unless hs[:enableValue] && !col.groupable
+      hs[:enablePivot]    = true unless hs[:enableValue]
       # hs[:enableRowGroup] = true unless col.name == 'id'
       # hs[:enableValue]    = true if col.name == 'id'
       # hs[:aggFunc]        = :avg if col.name == 'id'

@@ -4,6 +4,7 @@ PATH
     crossbeams-dataminer_portal (0.1.0)
       crossbeams-dataminer
       pg
+      rack-flash3
       rouge
       sequel
       sinatra
@@ -121,6 +122,8 @@ GEM
       json (~> 1.8)
     pkg-config (1.1.7)
     rack (1.6.4)
+    rack-flash3 (1.0.5)
+      rack
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
