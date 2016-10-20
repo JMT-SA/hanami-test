@@ -25,7 +25,7 @@
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -40,7 +40,7 @@
     :width: 200
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -55,7 +55,7 @@
     :width: 100
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -72,10 +72,10 @@
     :hide: false
     :groupable: false
     :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
+    :group_sum: 'true'
+    :group_avg: undefined
     :group_min: false
-    :group_max: false
+    :group_max: undefined
   service_provider_ref:
     :name: service_provider_ref
     :sequence_no: 5
@@ -100,7 +100,7 @@
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -115,7 +115,7 @@
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -130,7 +130,7 @@
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -145,7 +145,7 @@
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -160,7 +160,7 @@
     :width: 200
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -190,7 +190,7 @@
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -205,7 +205,7 @@
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
@@ -220,7 +220,7 @@
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: 'true'
     :group_by_seq: 
     :group_sum: false
     :group_avg: false

@@ -19,7 +19,7 @@
   <body>
     <div id="content">
       <h1>Bookshelf</h1>
-      <%= link_to 'Books', routes.books_path %> | <%= link_to 'Contained Books', routes.bookcontainer_path %>
+      <%= link_to 'Books', routes.books_path %> | <%= link_to 'Contained Books', routes.bookcontainer_path %> | <a href="/dataminer/index">Dataminer</a>
       <%= yield %>
     </div>
     <%= javascript 'ag-grid-enterprise', 'ag-enterprise-activation', 'crossbeams_utils', 'crossbeams-layout', 'crossbeams-grid-loader' %>
