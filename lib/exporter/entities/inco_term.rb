@@ -1,4 +1,3 @@
-class IncoTerm
-  include Hanami::Entity
-  attributes :inco_term
+class IncoTerm < Hanami::Entity
+  # attributes :inco_term
 end

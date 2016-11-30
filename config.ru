@@ -18,7 +18,7 @@ map "/#{ENV['DM_PREFIX']}" do #Where to mount dataminer
 end
 
 map '/' do
-  run Hanami::Container.new
+  run Hanami.app
 end
 
 #run Hanami::Container.new

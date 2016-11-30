@@ -5,7 +5,8 @@ module Web::Controllers::Books
     expose :books, :more_books
 
     def call(params)
-      @books = BookRepository.all
+      repository = BookRepository.new
+      @books = repository.all
       # Call dm with filename & params
       # @more_books = DataminerControl.dataminer_fetch(BookRepository, 'book_index')
       # @more_books = DataminerControl.dataminer_fetch(BookRepository, 'book_index', dm_params: {author: {value: 'John', operator: '<>'}}, limit: 10)

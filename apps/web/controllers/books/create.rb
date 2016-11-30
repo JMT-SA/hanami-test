@@ -17,7 +17,8 @@ module Web::Controllers::Books
 
     def call(params)
       if params.valid?
-        @book = BookRepository.create(Book.new(params[:book]))
+        repository = BookRepository.new
+        @book = repository.create(Book.new(params[:book]))
 
         # redirect_to routes.books_path
         redirect_to routes.bookcontainer_path

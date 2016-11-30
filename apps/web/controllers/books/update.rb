@@ -20,12 +20,13 @@ module Web::Controllers::Books
     def call(params)
       #puts ">>> uPARAMS: #{params.inspect}"
       puts ">>> uID: #{params[:id]} #{params[:book].inspect}"
-      @book = BookRepository.find(params[:id])
+      repository = BookRepository.new
+      @book = repository.find(params[:id])
       if params.valid?
         #puts ">>> VALID..."
         @book.title = params[:book][:title]
         @book.author = params[:book][:author]
-        BookRepository.update(@book)
+        repository.update(@book)
 
         # redirect_to routes.books_path
         redirect_to routes.bookcontainer_path

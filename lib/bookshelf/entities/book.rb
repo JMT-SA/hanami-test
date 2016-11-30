@@ -1,4 +1,3 @@
-class Book
-  include Hanami::Entity
-  attributes :title, :author
+class Book < Hanami::Entity
+  # attributes :title, :author
 end

@@ -5,7 +5,8 @@ module Web::Controllers::Books
     expose :books
 
     def call(params)
-      @books = BookRepository.all
+      repository = BookRepository.new
+      @books = repository.all
     end
   end
 end

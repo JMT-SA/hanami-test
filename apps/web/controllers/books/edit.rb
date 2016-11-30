@@ -9,7 +9,8 @@ module Web::Controllers::Books
       # puts ">>> ePARAMS: #{params.inspect}"
       # puts ">>> eID: #{params[:id]}"
       # @book = BookRepository.find(params[:id])
-      book = BookRepository.find(params[:id])
+      repository = BookRepository.new
+      book = repository.find(params[:id])
       @crossbeams_layout = Crossbeams::Layout::Page.new form_object: book, name: 'book'
     end
   end
