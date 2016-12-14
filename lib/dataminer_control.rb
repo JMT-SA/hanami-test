@@ -33,63 +33,67 @@ class DataminerControl
           suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true,
           valueGetter: "'/books/' + data.id + '|delete|Are you sure?'", colId: 'delete_link', cellRenderer: 'crossbeamsGridFormatters.hrefPromptFormatter'}
     col_defs << hs
-    
+    col_defs += column_definitions(report)
 
     #TODO: ActionColumns and menu. Use context for link text? - keep out of valueGetters?
-
-    report.ordered_columns.each do | col|
-      # Web::Logger.debug ">>> #{col.name} - #{col.hide}"
-      hs                  = {headerName: col.caption, field: col.name, hide: col.hide, headerTooltip: col.caption} #, enableRowGroup: col.groupable
-      hs[:width]          = col.width unless col.width.nil?
-      #agg_func            = agg_func_for_column(col)
-      #hs[:enableValue]    = true unless agg_func.nil?
-      hs[:enableValue]    = true if [:integer, :number].include?(col.data_type)
-      #hs[:aggFunc]        = agg_func unless agg_func.nil? || agg_func == :sum
-      hs[:enableRowGroup] = true unless hs[:enableValue] && !col.groupable
-      hs[:enablePivot]    = true unless hs[:enableValue]
-      # hs[:enableRowGroup] = true unless col.name == 'id'
-      # hs[:enableValue]    = true if col.name == 'id'
-      # hs[:aggFunc]        = :avg if col.name == 'id'
-      # if col.group_sum
-      # hs[:enableValue] = true
-      # elsif [col.group_avg, col.group_min, col.group_max].any?
-      #   hs["aggFunc] = case
-      #   when col.group_avg
-      #     :avg
-      #   when col.group_min
-      #     :min
-      #   when col.group_max
-      #     :max
-      #     ### count ?????
-      #   end
-      #
-      #total_amount: crossbeamsGridFormatters.numberWithCommas2
-      # integer, number, date and boolean.
-      if [:integer, :number].include?(col.data_type)
-        hs[:cellClass] = 'grid-number-column'
-        hs[:width]     = 100 if col.width.nil? && col.data_type == :integer
-        hs[:width]     = 120 if col.width.nil? && col.data_type == :number
-      end
-      if col.format == :delimited_1000
-        hs[:cellRenderer] = 'crossbeamsGridFormatters.numberWithCommas2'
-      end
-      if col.format == :delimited_1000_4
-        hs[:cellRenderer] = 'crossbeamsGridFormatters.numberWithCommas4'
-      end
-      if col.data_type == :boolean
-        hs[:cellRenderer] = 'crossbeamsGridFormatters.booleanFormatter'
-        hs[:cellClass]    = 'grid-boolean-column'
-        hs[:width]        = 100 if col.width.nil?
-      end
-
-      hs[:cellClassRules] = {"grid-row-red": "x === 'Fred'"} if col.name == 'author'
-
-      col_defs << hs
-    end
 
     {
       columnDefs: col_defs,
       #rowDefs:    repository.raw_query(report.runnable_sql)
+      rowDefs:    dataminer_query(report.runnable_sql)#repository.raw_query(report.runnable_sql)
+    }.to_json
+  end
+
+  def self.setup_report_with_parameters(report, params)
+    #{"col"=>"users.department_id", "op"=>"=", "opText"=>"is", "val"=>"17", "text"=>"Finance", "caption"=>"Department"}
+    input_parameters = ::JSON.parse(params[:json_var])
+    parms = []
+    # Check if this should become an IN parmeter (list of equal checks for a column.
+    eq_sel = input_parameters.select { |p| p['op'] == '=' }.group_by { |p| p['col'] }
+    in_sets = {}
+    in_keys = []
+    eq_sel.each do |col, qp|
+      in_keys << col if qp.length > 1
+    end
+
+    input_parameters.each do |in_param|
+      col = in_param['col']
+      if in_keys.include?(col)
+        in_sets[col] ||= []
+        in_sets[col] << in_param['val']
+        next
+      end
+      param_def = report.parameter_definition(col)
+      if 'between' == in_param['op']
+        parms << Crossbeams::Dataminer::QueryParameter.new(col, Crossbeams::Dataminer::OperatorValue.new(in_param['op'], [in_param['val'], in_param['val_to']], param_def.data_type))
+      else
+        parms << Crossbeams::Dataminer::QueryParameter.new(col, Crossbeams::Dataminer::OperatorValue.new(in_param['op'], in_param['val'], param_def.data_type))
+      end
+    end
+    in_sets.each do |col, vals|
+      param_def = report.parameter_definition(col)
+      parms << Crossbeams::Dataminer::QueryParameter.new(col, Crossbeams::Dataminer::OperatorValue.new('in', vals, param_def.data_type))
+    end
+
+    report.limit  = params[:limit].to_i  if params[:limit] != ''
+    report.offset = params[:offset].to_i if params[:offset] != ''
+    begin
+      report.apply_params(parms)
+    rescue StandardError => e
+      return "ERROR: #{e.message}"
+    end
+  end
+
+  def self.grid_from_dataminer_search(params)
+    report = get_report(params[:id])
+    setup_report_with_parameters(report, params)
+
+    # TODO: read another config to get the links and so on...
+
+    col_defs = column_definitions(report)
+
+    {
+      columnDefs: col_defs,
       rowDefs:    dataminer_query(report.runnable_sql)#repository.raw_query(report.runnable_sql)
     }.to_json
   end
@@ -128,14 +132,46 @@ class DataminerControl
     #repository.raw_query(report.runnable_sql)
   end
 
-  private
-
   # Load a YML report.
   def self.get_report(file_name) #TODO:  'bookshelf' should be variable...
     path     = File.join(Hanami.root, 'lib', 'bookshelf', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
     #path     = File.join(Hanami.root, 'lib', 'exporter', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
     rpt_hash = Crossbeams::Dataminer::YamlPersistor.new(path)
     Crossbeams::Dataminer::Report.load(rpt_hash)
+  end
+
+  private
+
+  def self.column_definitions(report)
+    col_defs = []
+    report.ordered_columns.each do | col|
+      hs                  = {headerName: col.caption, field: col.name, hide: col.hide, headerTooltip: col.caption}
+      hs[:width]          = col.width unless col.width.nil?
+      hs[:enableValue]    = true if [:integer, :number].include?(col.data_type)
+      hs[:enableRowGroup] = true unless hs[:enableValue] && !col.groupable
+      hs[:enablePivot]    = true unless hs[:enableValue] && !col.groupable
+      if [:integer, :number].include?(col.data_type)
+        hs[:cellClass] = 'grid-number-column'
+        hs[:width]     = 100 if col.width.nil? && col.data_type == :integer
+        hs[:width]     = 120 if col.width.nil? && col.data_type == :number
+      end
+      if col.format == :delimited_1000
+        hs[:cellRenderer] = 'crossbeamsGridFormatters.numberWithCommas2'
+      end
+      if col.format == :delimited_1000_4
+        hs[:cellRenderer] = 'crossbeamsGridFormatters.numberWithCommas4'
+      end
+      if col.data_type == :boolean
+        hs[:cellRenderer] = 'crossbeamsGridFormatters.booleanFormatter'
+        hs[:cellClass]    = 'grid-boolean-column'
+        hs[:width]        = 100 if col.width.nil?
+      end
+
+      # hs[:cellClassRules] = {"grid-row-red": "x === 'Fred'"} if col.name == 'author'
+
+      col_defs << hs
+    end
+    col_defs
   end
 
   # Set up a YML-loaded report with options.

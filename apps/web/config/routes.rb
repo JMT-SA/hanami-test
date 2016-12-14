@@ -1,5 +1,8 @@
 #post '/books/:id', to: 'books#update'
 # get '/books/:id/edit', to: 'books#edit'
+get '/search', to: 'search#grid', as: 'searchgrid'
+post '/search/run', to: 'search#run', as: 'searchrun'
+get '/search/:id', to: 'search#filter', as: 'searchfilter'
 get '/books/container', to: 'books#container', as: 'bookcontainer'
 get '/books/calledback', to: 'books#calledback', as: 'bookback'
 # post '/books', to: 'books#create'
