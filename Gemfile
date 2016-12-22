@@ -10,6 +10,7 @@ gem 'sass'
 gem 'crossbeams-dataminer', path: '/home/james/ra/crossbeams/crossbeams-dataminer'
 gem 'crossbeams-layout', path: '/home/james/ra/crossbeams/crossbeams-layout'
 gem 'crossbeams-dataminer_portal', path: '/home/james/ra/crossbeams/crossbeams-dataminer_portal'
+gem 'crossbeams-rack_middleware', path: '/home/james/ra/crossbeams/crossbeams-rack_middleware'
 
 group :development do
   # Code reloading

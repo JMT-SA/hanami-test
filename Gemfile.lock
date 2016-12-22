@@ -22,6 +22,12 @@ PATH
   specs:
     crossbeams-layout (0.1.0)
 
+PATH
+  remote: /home/james/ra/crossbeams/crossbeams-rack_middleware
+  specs:
+    crossbeams-rack_middleware (0.1.0)
+      rack
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -200,6 +206,7 @@ DEPENDENCIES
   crossbeams-dataminer!
   crossbeams-dataminer_portal!
   crossbeams-layout!
+  crossbeams-rack_middleware!
   dotenv (~> 2.0)
   hanami (~> 0.9)
   hanami-model (~> 0.7)

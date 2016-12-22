@@ -13,6 +13,9 @@ require './config/environment'
 # end
 # config.ru
 #map '/sinatra' do
+
+use Crossbeams::RackMiddleware::Banner, template: 'lib/banner_template.erb'
+
 map "/#{ENV['DM_PREFIX']}" do #Where to mount dataminer
   run Crossbeams::DataminerPortal::WebPortal.new
 end
