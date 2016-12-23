@@ -1,5 +1,12 @@
 #post '/books/:id', to: 'books#update'
 # get '/books/:id/edit', to: 'books#edit'
+# post '/session', to: 'session#create'
+# get '/session', to: 'session#failure'
+# delete '/session/:id', to: 'session#destroy'
+# get '/session/new', to: 'session#new'
+
+resources :session, except: :show
+
 get '/search', to: 'search#grid', as: 'searchgrid'
 post '/search/run', to: 'search#run', as: 'searchrun'
 get '/search/:id', to: 'search#filter', as: 'searchfilter'

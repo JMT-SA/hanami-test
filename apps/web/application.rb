@@ -19,6 +19,7 @@ module Web
       #
       load_paths << [
         'controllers',
+        'helpers',
         'views'
       ]
 
@@ -75,11 +76,39 @@ module Web
       #
       # See: http://www.rubydoc.info/gems/rack/Rack/Session/Cookie
       #
-      # sessions :cookie, secret: ENV['WEB_SESSIONS_SECRET']
+      sessions :cookie, secret: ENV['WEB_SESSIONS_SECRET']
 
       # Configure Rack middleware for this application
       #
       # middleware.use Rack::Protection
+  Warden::Manager.serialize_into_session{|user| user.id }
+  Warden::Manager.serialize_from_session{|id| UserRepository.new.find(id) }
+
+  Warden::Manager.before_failure do |env,opts|
+    env['REQUEST_METHOD'] = 'POST'
+  end
+
+  Warden::Strategies.add(:password) do
+    def valid?
+      params['session'] && params['session']['name'] && params['session']['password']
+    end
+
+    def authenticate!
+      user = UserRepository.new.authenticate(
+        params['session']['name'],
+        params['session']['password']
+        )
+      user.nil? ? fail!('Could not log in') : success!(user, 'Successfully logged in')
+    end
+  end
+
+  middleware.use Warden::Manager do |config|
+    config.scope_defaults :default,
+      strategies: [:password],
+      action: 'session/failure'
+    config.failure_app = self
+  end
+
 
       # Default format for the requests that don't specify an HTTP_ACCEPT header
       # Argument: A symbol representation of a mime type, default to :html
@@ -273,6 +302,7 @@ module Web
       view.prepare do
         include Hanami::Helpers
         include Web::Assets::Helpers
+        include Web::Helpers::Warden
       end
     end
 
@@ -307,7 +337,7 @@ module Web
       # See: http://hanamirb.org/guides/applications/logging
       #
       # Logger level. It defaults to ERROR
-      logger.level :error      
+      logger.level :error
     end
 
     ##

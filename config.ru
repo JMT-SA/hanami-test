@@ -8,6 +8,7 @@ require './config/environment'
 
 use Crossbeams::RackMiddleware::Banner, template: 'apps/web/templates/shared/_banner_template.html.erb'
 
+# Is this BEFORE warden?......
 map "/#{ENV['DM_PREFIX']}" do #Where to mount dataminer
   run Crossbeams::DataminerPortal::WebPortal.new
 end
