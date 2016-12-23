@@ -17,8 +17,8 @@
     <%= stylesheet 'pure', 'grids-responsive', 'crossbeams-layout', 'font-awesome.min' %>
   </head>
   <body>
+      <%= render partial: 'shared/banner_template' %>
     <div id="content">
-      <h1>Bookshelf</h1>
       <%= link_to 'Books', routes.books_path %> | <%= link_to 'Contained Books', routes.bookcontainer_path %> | <a href="/dataminer/index">Dataminer</a>
       | <%= link_to 'Search books', routes.searchfilter_path('book_index') %>
       <%= yield %>
