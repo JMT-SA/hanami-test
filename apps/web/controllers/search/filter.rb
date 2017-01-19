@@ -7,7 +7,7 @@ module Web::Controllers::Search
     def call(params)
       rpt_name = params[:id]
       # Web.logger.debug ">>> #{rpt_name}"
-      @rpt = DataminerControl.get_report(rpt_name)
+      @rpt = DataminerControl.get_report_from_search(rpt_name)
       # Web.logger.debug ">>> #{@rpt.caption}"
         # @rpt = lookup_report(params[:id])
         @qps = @rpt.query_parameter_definitions

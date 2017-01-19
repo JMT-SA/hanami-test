@@ -85,12 +85,12 @@ class DataminerControl
   end
 
   def self.grid_from_dataminer_search(params)
-    report = get_report(params[:id])
+    search_def = load_search_definition(params[:id])
+    report     = get_report(search_def[:dataminer_definition])
     setup_report_with_parameters(report, params)
 
-    # TODO: read another config to get the links and so on...
-
-    col_defs = column_definitions(report)
+    actions  = search_def[:actions]
+    col_defs = column_definitions(report, actions: actions)
 
     {
       columnDefs: col_defs,
@@ -132,6 +132,16 @@ class DataminerControl
     #repository.raw_query(report.runnable_sql)
   end
 
+  def self.get_report_from_search(file_name)
+    search_def = load_search_definition(file_name)
+    get_report(search_def[:dataminer_definition])
+  end
+
+  def self.load_search_definition(file_name)
+    path    = File.join(Hanami.root, 'lib', 'bookshelf', 'searches', file_name.sub('.yml', '') << '.yml')
+    YAML.load(File.read(path))
+  end
+
   # Load a YML report.
   def self.get_report(file_name) #TODO:  'bookshelf' should be variable...
     path     = File.join(Hanami.root, 'lib', 'bookshelf', 'dataminer_sources', file_name.sub('.yml', '') << '.yml')
@@ -142,8 +152,34 @@ class DataminerControl
 
   private
 
-  def self.column_definitions(report)
+  def self.column_definitions(report, options = {})
     col_defs = []
+
+    # Actions
+    # TODO:
+    #       1. Combine into action collection column.
+    #       2. Bring user permissions in to play.
+    if options[:actions]
+      options[:actions].each_with_index do |action, index|
+        renderer = action[:is_delete] ? 'crossbeamsGridFormatters.hrefPromptFormatter' : 'crossbeamsGridFormatters.hrefSimpleFormatter'
+        suffix   = "|#{action[:text] || 'link'}"
+        if action[:is_delete]
+          suffix << "|Are you sure?"
+        end
+        link = "'#{action[:url].gsub('{:id}', "'+data.id+'")}#{suffix}'"
+
+        hs = {headerName: '',
+              width: action[:width] || 60,
+              suppressMenu: true,   suppressSorting: true,   suppressMovable: true,
+              suppressFilter: true, enableRowGroup: false,   enablePivot: false,
+              enableValue: false,   suppressCsvExport: true, suppressToolPanel: true,
+              valueGetter: link,
+              colId: "link_#{index}",
+              cellRenderer: renderer }
+        col_defs << hs
+      end
+    end
+
     report.ordered_columns.each do | col|
       hs                  = {headerName: col.caption, field: col.name, hide: col.hide, headerTooltip: col.caption}
       hs[:width]          = col.width unless col.width.nil?

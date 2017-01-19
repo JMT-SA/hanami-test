@@ -23,7 +23,7 @@
       <% end %>
     <div id="content">
       <%= link_to 'Books', routes.books_path %> | <%= link_to 'Contained Books', routes.bookcontainer_path %> | <a href="/dataminer/index">Dataminer</a>
-      | <%= link_to 'Search books', routes.searchfilter_path('book_index') %>
+      | <%= link_to 'Search books', routes.searchfilter_path('books') %>
       <%= yield %>
     </div>
     <%= javascript 'ag-grid-enterprise', 'ag-enterprise-activation', 'crossbeams-local-storage', 'crossbeams-utils', 'crossbeams-layout', 'crossbeams-data-miner-params', 'crossbeams-grid-loader' %>
