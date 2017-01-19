@@ -81,33 +81,33 @@ module Web
       # Configure Rack middleware for this application
       #
       # middleware.use Rack::Protection
-  Warden::Manager.serialize_into_session{|user| user.id }
-  Warden::Manager.serialize_from_session{|id| UserRepository.new.find(id) }
-
-  Warden::Manager.before_failure do |env,opts|
-    env['REQUEST_METHOD'] = 'POST'
-  end
-
-  Warden::Strategies.add(:password) do
-    def valid?
-      params['session'] && params['session']['name'] && params['session']['password']
-    end
-
-    def authenticate!
-      user = UserRepository.new.authenticate(
-        params['session']['name'],
-        params['session']['password']
-        )
-      user.nil? ? fail!('Could not log in') : success!(user, 'Successfully logged in')
-    end
-  end
-
-  middleware.use Warden::Manager do |config|
-    config.scope_defaults :default,
-      strategies: [:password],
-      action: 'session/failure'
-    config.failure_app = self
-  end
+  # Warden::Manager.serialize_into_session{|user| user.id }
+  # Warden::Manager.serialize_from_session{|id| UserRepository.new.find(id) }
+  #
+  # Warden::Manager.before_failure do |env,opts|
+  #   env['REQUEST_METHOD'] = 'POST'
+  # end
+  #
+  # Warden::Strategies.add(:password) do
+  #   def valid?
+  #     params['session'] && params['session']['name'] && params['session']['password']
+  #   end
+  #
+  #   def authenticate!
+  #     user = UserRepository.new.authenticate(
+  #       params['session']['name'],
+  #       params['session']['password']
+  #       )
+  #     user.nil? ? fail!('Could not log in') : success!(user, 'Successfully logged in')
+  #   end
+  # end
+  #
+  # middleware.use Warden::Manager do |config|
+  #   config.scope_defaults :default,
+  #     strategies: [:password],
+  #     action: 'session/failure'
+  #   config.failure_app = self
+  # end
 
 
       # Default format for the requests that don't specify an HTTP_ACCEPT header

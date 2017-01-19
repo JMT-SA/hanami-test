@@ -6,6 +6,7 @@
 # get '/session/new', to: 'session#new'
 
 resources :session, except: :show
+get '/session/failure', to: 'session#failure'
 
 get '/search', to: 'search#grid', as: 'searchgrid'
 post '/search/run', to: 'search#run', as: 'searchrun'
@@ -25,6 +26,8 @@ get '/blurt', to: ->(env) { [200, {}, [File.read('.ruby-version')]] } # Could ma
 # mount SinatraApp.new, at: '/sinatra'
 #mount Frame2.app, at: '/frame2'
 #mount Crossbeams::DataminerPortal::WebPortal.new, at: '/sinatra'
+
+mount Crossbeams::DataminerPortal::WebPortal, at: "/#{ENV['DM_PREFIX']}" #Where to mount dataminer
 
 get '/', to: 'home#index'
 # See: http://www.rubydoc.info/gems/hanami-router/#Usage
